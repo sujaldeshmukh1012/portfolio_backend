@@ -1,0 +1,39 @@
+version: "3.9"
+services:
+  web:
+    build:
+      context: ./
+    command: gunicorn portfolio_backend.wsgi:application --bind 0.0.0.0:8000
+    container_name: web
+    expose:
+      - 8000:80
+    depends_on:
+      - db
+    links:
+      - db:db
+    networks:
+      - djangonetwork
+  db:
+    image: postgres:14.1-alpine
+    container_name: db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_PASSWORD: postgres
+    networks:
+      - djangonetwork
+  nginx:
+    build: ./nginx
+    restart: on-failure
+    ports:
+      - 80:80
+    depends_on:
+      - web
+    networks:
+      - djangonetwork
+volumes:
+  postgres_data:
+  # static_volume:
+networks:
+  djangonetwork:
+    driver: bridge
