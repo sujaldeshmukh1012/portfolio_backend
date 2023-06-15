@@ -41,7 +41,6 @@ services:
     volumes:
       - ./certbot/www/:/var/www/certbot/:rw
       - ./certbot/conf/:/etc/letsencrypt/:rw
-    domainname: "backend.sujalbhakare.com"
 volumes:
   postgres_data:
   # static_volume:
